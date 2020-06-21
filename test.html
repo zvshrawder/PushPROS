@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
   <!-- Latest compiled and minified JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-  
+  <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
 </head>
 
 <body>
@@ -40,16 +40,20 @@
 </body>
 
 <script>
+Handlebars.registerPartial('tableRow', '{{id}}{{name}}{{url}}');
 $("#fillButton").click(function()
 {
 	//alert("Clicked")
 	//ajax http://aimtell.com/files/sites.json
+	var tableRowTemp = "<tr><td>{{id}}</td><td>{{name}}</td><td>{{url}}</td></tr>";
+	var template = Handlebars.compile(tableRowTemp);
 		$.getJSON("https://aimtell.com/files/sites.json", 
 					function(result){
 					var tab = $("#testTable");
 					tab.find("tbody tr").remove();//clears table
 					$.each(result.sites, function(i, field){
-						tab.append("<tr><td>"+field.id+"</td><td>"+field.name+"</td><td>"+field.url+"</td></tr>")
+						var data = template({id:field.id, name:field.name, url:field.url});
+						tab.append(data);
 					
 					
 			});
